@@ -1,4 +1,4 @@
-name: Deploy Simple CI/CD
+name: Deploy Simple CI/CD  
 
 on:
   push:
@@ -13,6 +13,7 @@ env:
 permissions:
   contents: read
 
+
 jobs:
   web-test-build-image:
     name: Web Container - Test and Build
@@ -21,7 +22,7 @@ jobs:
     defaults:
       run:
         working-directory: web
-
+    
     steps:
       - uses: actions/checkout@v3
 
@@ -47,7 +48,7 @@ jobs:
         run: |
           docker image tag temp_web_image_name:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-  
+
   api-test-build-image:
     name: API Container - Test and Build
     runs-on: ubuntu-20.04
@@ -55,7 +56,7 @@ jobs:
     defaults:
       run:
         working-directory: api
-
+  
     steps:
       - uses: actions/checkout@v3
 
@@ -84,7 +85,7 @@ jobs:
 
   deploy:
     name: Deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-20.04 
     needs: [web-test-build-image, api-test-build-image]
 
     steps:
@@ -92,7 +93,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -126,9 +127,6 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 
-
-
-
 # Web Container Build/Test
 ## Get Source
 ## Build/Test
@@ -148,3 +146,6 @@ jobs:
 ## Login AWS
 ## Edit Task Definition
 ## Deploy
+
+
+
